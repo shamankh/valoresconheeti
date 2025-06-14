@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Lúdico de Valores e Conhecimentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e0f7fa;
+        }
+        .game-container {
+            margin: 0 auto;
+            width: 80%;
+            max-width: 600px;
+        }
+        .tree {
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/42/Arbre_des_amoureux.jpg');
+            background-size: cover;
+            width: 300px;
+            height: 400px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .fruit {
+            width: 60px;
+            height: 60px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .fruit:hover {
+            transform: scale(1.1);
+            background-color: #fbc02d;
+        }
+        #fruit1 { top: 50px; left: 60px; }
+        #fruit2 { top: 100px; left: 200px; }
+        #fruit3 { top: 200px; left: 100px; }
+        #fruit4 { top: 300px; left: 150px; }
+        #fruit5 { top: 250px; left: 50px; }
+        #fruit6 { top: 150px; left: 250px; }
+        .message {
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #388e3c;
+        }
+        .buttons-container {
+            margin: 20px 0;
+        }
+        .choice-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .choice-button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Jogo Lúdico de Valores e Conhecimentos</h1>
+        <p>Clique nos frutos para responder a diferentes perguntas.</p>
+        
+        <div class="tree">
+            <div class="fruit" id="fruit1" onclick="revealStory('Ajude um amigo ou ignore?', 'Ajude um amigo ou ignore?')"></div>
+            <div class="fruit" id="fruit2" onclick="revealStory('Devolver um brinquedo perdido ou ficar com ele?', 'Devolver um brinquedo perdido ou ficar com ele?')"></div>
+            <div class="fruit" id="fruit3" onclick="revealStory('Qual é a cor do céu em um dia ensolarado?', 'Qual é a cor do céu em um dia ensolarado?')"></div>
+            <div class="fruit" id="fruit4" onclick="revealStory('Compartilhar seu lanche ou comer sozinho?', 'Compartilhar seu lanche ou comer sozinho?')"></div>
+            <div class="fruit" id="fruit5" onclick="revealStory('Quantos dedos temos em uma mão?', 'Quantos dedos temos em uma mão?')"></div>
+            <div class="fruit" id="fruit6" onclick="revealStory('Ser honesto ou mentir?', 'Ser honesto ou mentir?')"></div>
+        </div>
+        
+        <div class="message" id="message"></div>
+
+        <div class="buttons-container" id="buttons-container" style="display:none;">
+            <button class="choice-button" id="button1"></button>
+            <button class="choice-button" id="button2"></button>
+        </div>
+
+        <audio id="click-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    </div>
+
+    <script>
+        function revealStory(story, speechText) {
+            const clickSound = document.getElementById('click-sound');
+            clickSound.play();
+
+            document.getElementById('message').textContent = story;
+            document.getElementById('buttons-container').style.display = 'block';
+
+            const utterance = new SpeechSynthesisUtterance(speechText);
+            utterance.lang = 'pt-BR';
+            speechSynthesis.speak(utterance);
+
+            if (story.includes('Ajude um amigo ou ignore?')) {
+                setButtons('Escolha Ética', 'Escolha Não Ética', 'positivo');
+            } else if (story.includes('Devolver um brinquedo perdido ou ficar com ele?')) {
+                setButtons('Escolha Ética', 'Escolha Não Ética', 'positivo');
+            } else if (story.includes('Qual é a cor do céu')) {
+                setButtons('Azul', 'Verde', 'positivo');
+            } else if (story.includes('Compartilhar seu lanche ou comer sozinho?')) {
+                setButtons('Escolha Ética', 'Escolha Não Ética', 'positivo');
+            } else if (story.includes('Quantos dedos temos em uma mão?')) {
+                setButtons('Cinco', 'Seis', 'positivo');
+            } else if (story.includes('Ser honesto ou mentir?')) {
+                setButtons('Escolha Ética', 'Escolha Não Ética', 'positivo');
+            }
+        }
+
+        function setButtons(option1, option2, correct) {
+            document.getElementById('button1').textContent = option1;
+            document.getElementById('button2').textContent = option2;
+
+            document.getElementById('button1').onclick = function() { chooseOption(correct === 'positivo' ? 'positivo' : 'negativo') };
+            document.getElementById('button2').onclick = function() { chooseOption(correct === 'positivo' ? 'negativo' : 'positivo') };
+        }
+
+        function chooseOption(option) {
+            let message = '';
+            if (option === 'positivo') {
+                message = 'Parabéns! Você escolheu corretamente!';
+            } else {
+                message = 'Essa não foi a melhor escolha. Vamos tentar novamente!';
+            }
+            document.getElementById('message').textContent = message;
+            document.getElementById('buttons-container').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
